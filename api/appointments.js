@@ -49,7 +49,7 @@ function sendError(res, error) {
   });
 }
 
-// GET all appointments
+// GET /api/appointments
 app.get('/', async (_req, res) => {
   try {
     await connectDB();
@@ -68,7 +68,7 @@ app.get('/', async (_req, res) => {
   }
 });
 
-// GET appointment by ID
+// GET /api/appointments/:id
 app.get('/:id', async (req, res) => {
   try {
     await connectDB();
@@ -87,7 +87,7 @@ app.get('/:id', async (req, res) => {
   }
 });
 
-// CREATE appointment
+// POST /api/appointments
 app.post('/', async (req, res) => {
   try {
     await connectDB();
@@ -100,7 +100,7 @@ app.post('/', async (req, res) => {
   }
 });
 
-// UPDATE appointment
+// PUT /api/appointments/:id
 app.put('/:id', async (req, res) => {
   try {
     await connectDB();
@@ -126,7 +126,7 @@ app.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE appointment
+// DELETE /api/appointments/:id
 app.delete('/:id', async (req, res) => {
   try {
     await connectDB();
