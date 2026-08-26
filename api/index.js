@@ -6,20 +6,18 @@ const app = express();
 
 app.use(express.json());
 
-app.use((req, _res, next) => {
-  if (req.url.startsWith('/api')) {
-    req.url = req.url.replace(/^\/api/, '') || '/';
-  }
-  next();
-});
-
 let cachedConnection = null;
 
 async function connectDB() {
-  if (cachedConnection && mongoose.connection.readyState === 1) return cachedConnection;
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    return cachedConnection;
+  }
 
   const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error('MONGODB_URI environment variable is not configured');
+
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is not configured');
+  }
 
   cachedConnection = await mongoose.connect(uri);
   return cachedConnection;
@@ -27,76 +25,133 @@ async function connectDB() {
 
 function sendError(res, error) {
   console.error(error);
+
   if (error?.name === 'ValidationError') {
     return res.status(400).json({
       message: 'Validation failed',
-      errors: Object.fromEntries(Object.entries(error.errors).map(([key, value]) => [key, value.message])),
+      errors: Object.fromEntries(
+        Object.entries(error.errors).map(([key, value]) => [
+          key,
+          value.message
+        ])
+      )
     });
   }
 
   if (error?.name === 'CastError') {
-    return res.status(400).json({ message: 'Invalid appointment ID' });
+    return res.status(400).json({
+      message: 'Invalid appointment ID'
+    });
   }
 
-  return res.status(500).json({ message: 'Internal server error' });
+  return res.status(500).json({
+    message: 'Internal server error'
+  });
 }
 
+// Health check
 app.get('/', (_req, res) => {
-  res.json({ message: 'Appointment Scheduler API is running' });
+  res.json({
+    message: 'Appointment Scheduler API is running'
+  });
 });
 
+// GET all appointments
 app.get('/appointments', async (_req, res) => {
   try {
     await connectDB();
-    const appointments = await Appointment.find().sort({ date: 1, time: 1, createdAt: -1 });
+
+    const appointments = await Appointment
+      .find()
+      .sort({
+        date: 1,
+        time: 1,
+        createdAt: -1
+      });
+
     res.json(appointments);
   } catch (error) {
     sendError(res, error);
   }
 });
 
+// GET appointment by ID
 app.get('/appointments/:id', async (req, res) => {
   try {
     await connectDB();
+
     const appointment = await Appointment.findById(req.params.id);
-    if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: 'Appointment not found'
+      });
+    }
+
     res.json(appointment);
   } catch (error) {
     sendError(res, error);
   }
 });
 
+// CREATE appointment
 app.post('/appointments', async (req, res) => {
   try {
     await connectDB();
+
     const appointment = await Appointment.create(req.body);
+
     res.status(201).json(appointment);
   } catch (error) {
     sendError(res, error);
   }
 });
 
+// UPDATE appointment
 app.put('/appointments/:id', async (req, res) => {
   try {
     await connectDB();
+
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      {
+        new: true,
+        runValidators: true
+      }
     );
-    if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: 'Appointment not found'
+      });
+    }
+
     res.json(appointment);
   } catch (error) {
     sendError(res, error);
   }
 });
 
+// DELETE appointment
 app.delete('/appointments/:id', async (req, res) => {
   try {
     await connectDB();
-    const appointment = await Appointment.findByIdAndDelete(req.params.id);
-    if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment deleted successfully', appointment });
+
+    const appointment = await Appointment.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: 'Appointment not found'
+      });
+    }
+
+    res.json({
+      message: 'Appointment deleted successfully',
+      appointment
+    });
   } catch (error) {
     sendError(res, error);
   }
@@ -104,7 +159,13 @@ app.delete('/appointments/:id', async (req, res) => {
 
 export default app;
 
+// Local development only
 if (process.env.NODE_ENV !== 'production') {
   const port = process.env.PORT || 5000;
-  app.listen(port, () => console.log(`API server running on http://localhost:${port}`));
+
+  app.listen(port, () => {
+    console.log(
+      `API server running on http://localhost:${port}`
+    );
+  });
 }
