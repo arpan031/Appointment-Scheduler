@@ -7,7 +7,7 @@ const emptyForm = {
   purpose: ''
 };
 
-const API_URL = '/appointments';
+const API_URL = '/api/appointments';
 
 export default function App() {
   const [form, setForm] = useState(emptyForm);
