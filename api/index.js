@@ -45,19 +45,25 @@ function sendError(res, error) {
   }
 
   return res.status(500).json({
-    message: 'Internal server error'
+    message: error?.message || 'Internal server error'
   });
 }
 
+/*
+ * IMPORTANT:
+ * Vercel is passing /api/... to this Express function.
+ * Therefore these routes include /api.
+ */
+
 // Health check
-app.get('/', (_req, res) => {
+app.get('/api', (_req, res) => {
   res.json({
     message: 'Appointment Scheduler API is running'
   });
 });
 
-// GET all appointments
-app.get('/appointments', async (_req, res) => {
+// GET all
+app.get('/api/appointments', async (_req, res) => {
   try {
     await connectDB();
 
@@ -75,8 +81,8 @@ app.get('/appointments', async (_req, res) => {
   }
 });
 
-// GET appointment by ID
-app.get('/appointments/:id', async (req, res) => {
+// GET one
+app.get('/api/appointments/:id', async (req, res) => {
   try {
     await connectDB();
 
@@ -94,8 +100,8 @@ app.get('/appointments/:id', async (req, res) => {
   }
 });
 
-// CREATE appointment
-app.post('/appointments', async (req, res) => {
+// CREATE
+app.post('/api/appointments', async (req, res) => {
   try {
     await connectDB();
 
@@ -107,8 +113,8 @@ app.post('/appointments', async (req, res) => {
   }
 });
 
-// UPDATE appointment
-app.put('/appointments/:id', async (req, res) => {
+// UPDATE
+app.put('/api/appointments/:id', async (req, res) => {
   try {
     await connectDB();
 
@@ -133,8 +139,8 @@ app.put('/appointments/:id', async (req, res) => {
   }
 });
 
-// DELETE appointment
-app.delete('/appointments/:id', async (req, res) => {
+// DELETE
+app.delete('/api/appointments/:id', async (req, res) => {
   try {
     await connectDB();
 
@@ -158,14 +164,3 @@ app.delete('/appointments/:id', async (req, res) => {
 });
 
 export default app;
-
-// Local development only
-if (process.env.NODE_ENV !== 'production') {
-  const port = process.env.PORT || 5000;
-
-  app.listen(port, () => {
-    console.log(
-      `API server running on http://localhost:${port}`
-    );
-  });
-}
