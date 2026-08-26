@@ -1,20 +1,78 @@
 # Appointment Scheduler
 
-Full-stack appointment scheduler using React, Express, MongoDB, and Mongoose.
+A full-stack appointment scheduling application built with **React, Node.js, Express, MongoDB, and Mongoose**.
+
+The application allows users to create, view, update, and delete appointments through a clean React interface. The frontend communicates with a REST API built with Express, while appointment data is stored in MongoDB.
+
+---
 
 ## Features
-- React form built with `useState`
-- `useEffect` loads all appointments on page load
-- Create, update, and delete update React state from API responses
-- Express + Mongoose CRUD REST API
-- Required-field schema validation in Mongoose
-- Vercel-ready Express serverless API
-- REST endpoints: `/appointments`, `/appointments/:id`
 
-## Local setup
+- Create new appointments
+- View all appointments
+- View appointment details
+- Edit existing appointments
+- Delete appointments
+- Mongoose schema validation
+- MongoDB database integration
+- RESTful API
+- React state management using `useState`
+- API loading using `useEffect`
+- Responsive user interface
+- Vercel deployment support
 
-1. Install Node.js 18+.
-2. Run `npm install`.
-3. Create `.env` from `.env.example` and set `MONGODB_URI`.
-4. Run the API with `npm start` and the React app with `npm run dev` (for local development, use a proxy or change `API` in `src/App.jsx` to `http://localhost:5000/appointments`).
-5. For Vercel, set `MONGODB_URI` in Project Settings > Environment Variables. The frontend calls `/appointments`, which is rewritten to the Express function at `/api/appointments`.
+---
+
+## Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- HTML5
+- CSS3
+- Fetch API
+- `useState`
+- `useEffect`
+
+### Backend
+
+- Node.js
+- Express.js
+- Mongoose
+
+### Database
+
+- MongoDB
+- MongoDB Atlas
+
+### Deployment
+
+- Vercel
+- GitHub
+
+---
+
+## Project Structure
+
+```text
+Appointment-Scheduler/
+│
+├── api/
+│   └── index.js
+│
+├── models/
+│   └── Appointment.js
+│
+├── src/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── styles.css
+│
+├── .env.example
+├── .gitignore
+├── README.md
+├── index.html
+├── package.json
+└── vercel.json
