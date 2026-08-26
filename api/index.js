@@ -3,7 +3,15 @@ import mongoose from 'mongoose';
 import Appointment from '../models/Appointment.js';
 
 const app = express();
+
 app.use(express.json());
+
+app.use((req, _res, next) => {
+  if (req.url.startsWith('/api')) {
+    req.url = req.url.replace(/^\/api/, '') || '/';
+  }
+  next();
+});
 
 let cachedConnection = null;
 
