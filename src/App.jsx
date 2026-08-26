@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const emptyForm = { clientName: '', date: '', time: '', purpose: '' };
+const emptyForm = {
+  clientName: '',
+  date: '',
+  time: '',
+  purpose: ''
+};
+
 const API_URL = '/appointments';
 
 export default function App() {
