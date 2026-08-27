@@ -49,7 +49,7 @@ function sendError(res, error) {
   });
 }
 
-
+// Health check
 app.get('/api', (_req, res) => {
   res.json({
     message: 'Appointment Scheduler API is running'
